@@ -1,0 +1,46 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "io.github.cottonmc",
+		"id": "libcd",
+		"version": "${version}",
+		"metadata": {
+			"name": "LibCapableData",
+			"description": "Various tweaks to make data packs even more useful!",
+			"contributors": {
+				"CottonMC": "Owner"
+			},
+			"contact": {
+				"issues": "https://github.com/CottonMC/LibCD/issues",
+				"sources": "https://github.com/CottonMC/LibCD"
+			},
+			"license": "MIT",
+			"icon": "assets/libcd/icon.png"
+		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
+		"entrypoints": {
+			"init": "io.github.cottonmc.libcd.LibCD",
+			"libcd": "io.github.cottonmc.libcd.CDContent",
+			"libcd:advancement_rewards": "io.github.cottonmc.libcd.DevAdvancementRewards"
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=0.16.0-"
+			},
+			{
+				"id": "quilted_fabric_api",
+				"versions": ">=1.0.0-"
+			},
+			{
+				"id": "minecraft",
+				"versions": ">=1.18.2"
+			}
+		]
+	},
+	"mixin": "libcd.mixins.json",
+	"access_widener": "libcd.accesswidener",
+	"modmenu": {
+		"badges": [ "library" ]
+	}
+}

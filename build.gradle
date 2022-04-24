@@ -1,125 +1,88 @@
 plugins {
-	id "java"
-	id "eclipse"
-	id "idea"
-	id "fabric-loom" version "0.4-SNAPSHOT"
-	id "maven-publish"
-	id "com.jfrog.artifactory" version "4.9.0"
+	id 'maven-publish'
+	alias(libs.plugins.quilt.loom)
 }
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+archivesBaseName = project.archives_base_name
+version = "${project.version}+${libs.versions.minecraft.get()}"
+group = project.maven_group
 
-if(rootProject.file("private.gradle").exists()) { //Publishing details
-	apply from: "private.gradle"
-}
+repositories {}
 
-archivesBaseName = "${project.archives_base_name}"
-group = "${project.maven_group}"
-version = "${project.mod_version}+${project.minecraft_version}"
-
-minecraft {
-	accessWidener = file("src/main/resources/libcd.accesswidener")
-}
-
-repositories {
-	mavenCentral()
-	maven { url "https://server.bbkr.space/artifactory/libs-release" }
-	maven { url "https://www.jitpack.io" }
-}
-
+// All the dependencies are declared at gradle/libs.version.toml and referenced with "libs.<id>"
+// See https://docs.gradle.org/current/userguide/platforms.html for information on how version catalogs work.
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.minecraft_version}+build.${project.yarn_build}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-	compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+	minecraft libs.minecraft
+	mappings loom.layered {
+		addLayer quiltMappings.mappings("org.quiltmc:quilt-mappings:${libs.versions.quilt.mappings.get()}:v2")
+		// officialMojangMappings() // Uncomment if you want to use Mojang mappings as your primary mappings, falling back on QM for parameters and Javadocs
+	}
+	modImplementation libs.quilt.loader
 
+	// QSL is not a complete API; You will need Quilted Fabric API to fill in the gaps.
+	// Quilted Fabric API will automatically pull in the correct QSL version.
+	modImplementation libs.quilted.fabric.api
+}
+
+loom {
+	accessWidenerPath = file("src/main/resources/libcd.accesswidener")
 }
 
 processResources {
-	inputs.property "version", project.version
-	from(sourceSets.main.resources.srcDirs) {
-		include "fabric.mod.json"
-		expand version: project.version
-	}
-	from(sourceSets.main.resources.srcDirs) {
-		exclude "fabric.mod.json"
+	inputs.property "version", version
+
+	filesMatching('quilt.mod.json') {
+		expand "version": version
 	}
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
+tasks.withType(JavaCompile).configureEach {
+	it.options.encoding = "UTF-8"
+	// Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+	it.options.release = 17
 }
 
-// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-// if it is present.
-// If you remove this task, sources will not be generated.
-task sourcesJar(type: Jar, dependsOn: classes) {
-	classifier = "sources"
-	from sourceSets.main.allSource
+java {
+	// Still required by IDEs such as Eclipse and Visual Studio Code
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
+
+	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task if it is present.
+	// If you remove this line, sources will not be generated.
+	withSourcesJar()
+
+	// If this mod is going to be a library, then it should also generate Javadocs in order to aid with developement.
+	// Uncomment this line to generate them.
+	// withJavadocJar()
 }
 
+// If you plan to use a different file for the license, don't forget to change the file name here!
 jar {
-	from "LICENSE"
+	from("LICENSE") {
+		rename { "${it}_${archivesBaseName}" }
+	}
 }
 
-// configure the maven publication
+// Configure the maven publication
 publishing {
 	publications {
-		maven(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			//artifact(jar) {
-			//	builtBy remapJar
-			//}
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}.jar") { //release jar - file location not provided anywhere in loom
-				classifier null
-				builtBy remapJar
-			}
-
-			artifact ("${project.buildDir.absolutePath}/libs/${archivesBaseName}-${project.version}-dev.jar") { //release jar - file location not provided anywhere in loom
-				classifier "dev"
-				builtBy remapJar
-			}
-
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
+		mavenJava(MavenPublication) {
+			from components.java
 		}
 	}
 
-	// select the repositories you want to publish to
+	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
 	repositories {
-		// uncomment to publish to the local maven
-		// mavenLocal()
-	}
-}
-
-artifactory {
-	if (project.hasProperty("artifactoryUsername")) {
-		contextUrl = "https://server.bbkr.space/artifactory/"
-		publish {
-			repository {
-				if (version.contains("SNAPSHOT")) {
-					repoKey = "libs-snapshot"
-				} else {
-					repoKey = "libs-release"
+		if (project.hasProperty("artifactoryUsername")) {
+			maven {
+				url = "https://server.bbkr.space/artifactory/libs-release/"
+				credentials {
+					username = artifactoryUsername
+					password = artifactoryPassword
 				}
-
-				username = artifactoryUsername
-				password = artifactoryPassword
 			}
-			defaults {
-				publications("maven")
-
-				publishArtifacts = true
-				publishPom = true
-			}
+		} else {
+			println "Cannot configure artifactory; please define ext.artifactoryUsername and ext.artifactoryPassword before running publish"
 		}
-	} else {
-		println "Cannot configure artifactory; please define ext.artifactoryUsername and ext.artifactoryPassword before running artifactoryPublish"
 	}
 }

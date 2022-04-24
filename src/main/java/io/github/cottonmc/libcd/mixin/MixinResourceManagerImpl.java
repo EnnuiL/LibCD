@@ -19,11 +19,8 @@ import java.io.IOException;
 import java.util.*;
 import java.util.function.Predicate;
 
-@Mixin(ReloadableResourceManagerImpl.class)
-public abstract class MixinResourceManagerImpl implements ReloadableResourceManager,  ResourceSearcher {
-
-	@Shadow public abstract List<Resource> getAllResources(Identifier id) throws IOException;
-
+@Mixin(MultiPackResourceManager.class)
+public abstract class MixinResourceManagerImpl implements AutoCloseableResourceManager, ResourceSearcher {
 	@Shadow @Final private Map<String, NamespaceResourceManager> namespaceManagers;
 
 	@Inject(method = "findResources(Ljava/lang/String;Ljava/util/function/Predicate;)Ljava/util/Collection;", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
@@ -36,7 +33,7 @@ public abstract class MixinResourceManagerImpl implements ReloadableResourceMana
 			Identifier metaId = new Identifier(id.getNamespace(), id.getPath() + ".mcmeta");
 			if (libcd$contains(metaId)) {
 				try {
-					Resource meta = getResource(metaId);
+					Resource meta = method_14486(metaId);
 					String metaText = IOUtils.toString(meta.getInputStream(), Charsets.UTF_8);
 					if (!ConditionalData.shouldLoad(id, metaText)) {
 						sortedResources.remove(id);

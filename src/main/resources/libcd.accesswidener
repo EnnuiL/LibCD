@@ -1,2 +1,4 @@
 accessWidener   v1  named
 extendable  method  net/minecraft/loot/entry/ItemEntry <init> (Lnet/minecraft/item/Item;II[Lnet/minecraft/loot/condition/LootCondition;[Lnet/minecraft/loot/function/LootFunction;)V
+accessible  class   net/minecraft/tag/Tag$TagEntry
+accessible  class   net/minecraft/tag/Tag$ObjectEntry

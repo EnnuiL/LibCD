@@ -2,8 +2,6 @@ package io.github.cottonmc.libcd.mixin;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import io.github.cottonmc.libcd.api.advancement.AdvancementRewardsManager;
 import io.github.cottonmc.libcd.impl.CustomRewardsUtils;
@@ -16,7 +14,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.function.BiConsumer;
 

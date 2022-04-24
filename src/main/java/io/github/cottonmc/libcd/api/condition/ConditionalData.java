@@ -20,14 +20,12 @@ public class ConditionalData {
 		}
 		JsonObject json = JsonHelper.deserialize(meta);
 		JsonElement elem = json.get("when");
-		if (elem instanceof JsonArray) {
-			JsonArray array = (JsonArray)elem;
+		if (elem instanceof JsonArray array) {
 			for (JsonElement condition : array) {
-				if (!(condition instanceof JsonObject)) {
+				if (!(condition instanceof JsonObject obj)) {
 					CDCommons.logger.error("Error parsing meta for{}: item {} in condition list not a JsonObject", resourceId, condition.toString());
 					return false;
 				}
-				JsonObject obj = (JsonObject)condition;
 				for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
 					String key = entry.getKey();
 					Identifier id = key.equals("or")? new Identifier(CDCommons.MODID, "or") : new Identifier(key);
@@ -50,8 +48,7 @@ public class ConditionalData {
 
 	@Nullable
 	public static Object parseElement(JsonElement element) {
-		if (element instanceof JsonPrimitive) {
-			JsonPrimitive prim = (JsonPrimitive) element;
+		if (element instanceof JsonPrimitive prim) {
 			if (prim.isNumber()) return prim.getAsNumber();
 			if (prim.isBoolean()) return prim.getAsBoolean();
 			else return prim.getAsString();

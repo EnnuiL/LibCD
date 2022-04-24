@@ -3,7 +3,6 @@ package io.github.cottonmc.libcd.mixin;
 import io.github.cottonmc.libcd.api.CDCommons;
 import io.github.cottonmc.libcd.impl.TagBuilderWarningAccessor;
 import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagGroup;
 import net.minecraft.tag.TagGroupLoader;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,7 +23,7 @@ public class MixinTagContainer<T> {
     @Inject(method = "applyReload", at = @At(value = "INVOKE", target = "Lnet/minecraft/tag/Tag$Builder;build(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/Optional;"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void onPut(
             Map<Identifier, Tag.Builder> map,
-            CallbackInfoReturnable<TagGroup<T>> ci,
+            CallbackInfoReturnable<Map<Identifier, Tag<T>>> ci,
             Map<Identifier, Tag<T>> map2,
             Function<Identifier, Tag<T>> function,
             Function function2,

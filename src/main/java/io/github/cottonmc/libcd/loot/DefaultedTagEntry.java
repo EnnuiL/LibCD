@@ -6,13 +6,14 @@ import net.minecraft.loot.condition.LootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.LootFunction;
 import net.minecraft.tag.Tag;
+import net.minecraft.util.Holder;
 
 public class DefaultedTagEntry extends ItemEntry {
 	public DefaultedTagEntry(Item item, int weight, int quality, LootCondition[] conditions, LootFunction[] functions) {
 		super(item, weight, quality, conditions, functions);
 	}
 
-	public static Builder<?> builder(Tag<Item> itemTag) {
+	public static Builder<?> builder(Tag<Holder<Item>> itemTag) {
 		return builder((weight, quality, conditions, functions) ->
 				new DefaultedTagEntry(TagHelper.ITEM.getDefaultEntry(itemTag), weight, quality, conditions, functions));
 	}

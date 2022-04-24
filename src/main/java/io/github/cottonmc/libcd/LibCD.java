@@ -1,6 +1,11 @@
 package io.github.cottonmc.libcd;
 
 import com.google.gson.Gson;
+
+import org.quiltmc.loader.api.ModContainer;
+import org.quiltmc.loader.api.QuiltLoader;
+import org.quiltmc.qsl.base.api.entrypoint.ModInitializer;
+
 import io.github.cottonmc.libcd.api.CDCommons;
 import io.github.cottonmc.libcd.api.LibCDInitializer;
 import io.github.cottonmc.libcd.api.advancement.AdvancementRewardsManager;
@@ -8,8 +13,6 @@ import io.github.cottonmc.libcd.api.condition.ConditionManager;
 import io.github.cottonmc.libcd.api.init.AdvancementInitializer;
 import io.github.cottonmc.libcd.api.init.ConditionInitializer;
 import io.github.cottonmc.libcd.loot.DefaultedTagEntrySerializer;
-import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.loot.entry.LootPoolEntryType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -26,11 +29,11 @@ public class LibCD implements ModInitializer {
 	}
 
 	@Override
-	public void onInitialize() {
+	public void onInitialize(ModContainer mod) {
 		config = loadConfig();
-		FabricLoader.getInstance().getEntrypoints(MODID + ":conditions", ConditionInitializer.class).forEach(init -> init.initConditions(ConditionManager.INSTANCE));
-		FabricLoader.getInstance().getEntrypoints(MODID + ":advancement_rewards", AdvancementInitializer.class).forEach(init -> init.initAdvancementRewards(AdvancementRewardsManager.INSTANCE));
-		FabricLoader.getInstance().getEntrypoints(MODID, LibCDInitializer.class).forEach(init -> {
+		QuiltLoader.getEntrypoints(MODID + ":conditions", ConditionInitializer.class).forEach(init -> init.initConditions(ConditionManager.INSTANCE));
+		QuiltLoader.getEntrypoints(MODID + ":advancement_rewards", AdvancementInitializer.class).forEach(init -> init.initAdvancementRewards(AdvancementRewardsManager.INSTANCE));
+		QuiltLoader.getEntrypoints(MODID, LibCDInitializer.class).forEach(init -> {
 			init.initConditions(ConditionManager.INSTANCE);
 			init.initAdvancementRewards(AdvancementRewardsManager.INSTANCE);
 		});
@@ -40,7 +43,7 @@ public class LibCD implements ModInitializer {
 	public static CDConfig loadConfig() {
 		try {
 			Gson gson = CDCommons.newGson();
-			File file = FabricLoader.getInstance().getConfigDir().resolve("libcd.json").toFile();
+			File file = QuiltLoader.getConfigDir().resolve("libcd.json").toFile();
 			if (!file.exists()) saveConfig(new CDConfig());
 			FileReader reader = new FileReader(file);
 			return(gson.fromJson(reader, CDConfig.class));
@@ -54,7 +57,7 @@ public class LibCD implements ModInitializer {
 
 	public static void saveConfig(CDConfig config) {
 		try {
-			File file = FabricLoader.getInstance().getConfigDir().resolve("libcd.json").toFile();
+			File file = QuiltLoader.getConfigDir().resolve("libcd.json").toFile();
 			String result = CDCommons.newGson().toJson(config);
 			if (!file.exists()) file.createNewFile();
 			FileOutputStream out = new FileOutputStream(file,false);
