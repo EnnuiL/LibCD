@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 @Mixin(AdvancementRewards.class)
-public class MixinAdvancementRewardsDeserializer {
+public class AdvancementRewardsDeserializerMixin {
     @Inject(method = "fromJson", at = @At("TAIL"), cancellable = true)
     private static void onDeserialize(
             JsonObject json,

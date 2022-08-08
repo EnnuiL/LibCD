@@ -1,7 +1,6 @@
 package io.github.cottonmc.libcd.mixin;
 
 import com.google.common.collect.Maps;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -19,7 +18,7 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 @Mixin(AdvancementRewards.class)
-public class MixinAdvancementRewards implements CustomRewardsUtils {
+public class AdvancementRewardsMixin implements CustomRewardsUtils {
     private final Map<Identifier, JsonObject> settings = Maps.newHashMap();
     private final Map<Identifier, BiConsumer<ServerPlayerEntity, JsonObject>> appliers = Maps.newHashMap();
 

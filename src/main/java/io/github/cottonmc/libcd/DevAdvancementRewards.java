@@ -13,13 +13,13 @@ public class DevAdvancementRewards implements AdvancementInitializer {
 					new Identifier("libcd:without_settings"),
 					(serverPlayerEntity) -> CDCommons.logger.info(
 							"{} earned libcd:without_settings",
-							serverPlayerEntity.getDisplayName().asString())
+							serverPlayerEntity.getDisplayName().getString())
 			);
 			manager.register(
 					new Identifier("libcd:with_settings"),
 					(serverPlayerEntity, settings) -> CDCommons.logger.info(
 							"{} earned libcd:with_settings{setting1: {}}",
-							serverPlayerEntity.getDisplayName().asString(),
+							serverPlayerEntity.getDisplayName().getString(),
 							settings.get("setting1").getAsNumber())
 			);
 		}
