@@ -2,20 +2,21 @@
 	"schema_version": 1,
 	"quilt_loader": {
 		"group": "io.github.cottonmc",
-		"id": "libcd",
+		"id": "libcd_ennui_edition",
 		"version": "${version}",
 		"metadata": {
-			"name": "LibCapableData",
-			"description": "Various tweaks to make data packs even more useful!",
+			"name": "LibConditionalData: Ennui Edition",
+			"description": "It's LibCD but ported to 1.19.2 for usage on Crooked Crooks. Original Description: Various tweaks to make data packs even more useful!",
 			"contributors": {
+				"Ennui Langeweile": "Unofficial Maintainer",
 				"CottonMC": "Owner"
 			},
 			"contact": {
-				"issues": "https://github.com/CottonMC/LibCD/issues",
-				"sources": "https://github.com/CottonMC/LibCD"
+				"issues": "https://github.com/EnnuiL/LibCD/issues",
+				"sources": "https://github.com/EnnuiL/LibCD"
 			},
 			"license": "MIT",
-			"icon": "assets/libcd/icon.png"
+			"icon": "assets/libcd_ennui_edition/icon.png"
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
@@ -35,6 +36,12 @@
 			{
 				"id": "minecraft",
 				"versions": ">=1.19.2"
+			}
+		],
+		"provides": [
+			{
+				"id": "libcd",
+				"version": "4.0.0+1.19.2"
 			}
 		]
 	},
