@@ -25,6 +25,7 @@ import com.google.common.base.Charsets;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Predicate;
 
 @Mixin(NamespaceResourceManager.class)
@@ -51,9 +52,10 @@ public abstract class NamespaceResourceManagerMixin implements ResourceManager, 
 	}
 
 	@Inject(method = "findResources", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILEXCEPTION)
-	private void checkConditioalRecipes(String startingPath, Predicate<Identifier> pathFilter, CallbackInfoReturnable<Map<Identifier, Resource>> cir,
+	private void checkConditionalRecipes(String startingPath, Predicate<Identifier> pathFilter, CallbackInfoReturnable<Map<Identifier, Resource>> cir,
 										Object2IntMap<Identifier> object2IntMap, int i, Map<Identifier, Resource> map) {
-		for (Identifier id : map.keySet()) {
+		Set<Identifier> clonedMapKeys = Set.copyOf(map.keySet());
+		for (Identifier id : clonedMapKeys) {
 			//don't try to load for things that use mcmetas already!
 			if (id.getPath().contains(".mcmeta") || id.getPath().contains(".png")) continue;
 			Identifier metaId = new Identifier(id.getNamespace(), id.getPath() + ".mcmeta");
