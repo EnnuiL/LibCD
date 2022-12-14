@@ -6,9 +6,10 @@ import io.github.cottonmc.libcd.api.CDCommons;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.jetbrains.annotations.Nullable;
 
 public class ConditionalData {
 	static final Map<Identifier, Condition> conditions = new HashMap<>();

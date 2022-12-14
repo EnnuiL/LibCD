@@ -13,11 +13,10 @@ import io.github.cottonmc.libcd.api.LibCDInitializer;
 import io.github.cottonmc.libcd.api.advancement.AdvancementRewardsManager;
 import io.github.cottonmc.libcd.api.condition.ConditionManager;
 import io.github.cottonmc.libcd.api.condition.ConditionalData;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.Items;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 import java.util.Map;
@@ -40,55 +39,53 @@ public class CDContent implements LibCDInitializer {
 			throw new CDSyntaxError("mod_loaded must accept either a String or an Array!");
 		});
 		manager.registerCondition(new Identifier(CDCommons.MODID, "item_exists"), value -> {
-			if (value instanceof String stringValue) return Registry.ITEM.get(new Identifier(stringValue)) != Items.AIR;
+			if (value instanceof String stringValue) return Registries.ITEM.containsId(new Identifier(stringValue));
 			if (value instanceof List) {
 				//noinspection unchecked
 				for (JsonElement el : (List<JsonElement>)value) {
 					if (!(el instanceof JsonPrimitive)) throw new CDSyntaxError("item_exists array must only contain Strings!");
 					String name = el.getAsString();
-					if (Registry.ITEM.get(new Identifier(name)) == Items.AIR) return false;
+					if (!Registries.ITEM.containsId(new Identifier(name))) return false;
 				}
 				return true;
 			}
 			throw new CDSyntaxError("item_exists must accept either a String or an Array!");
 		});
 		manager.registerCondition(new Identifier(CDCommons.MODID, "item_tag_exists"), value -> {
-			if (value instanceof String stringValue) return Registry.ITEM.isKnownTag(TagKey.of(Registry.ITEM_KEY, new Identifier(stringValue)));
+			if (value instanceof String stringValue) return Registries.ITEM.getTag(TagKey.of(RegistryKeys.ITEM, new Identifier(stringValue))).isPresent();
 			if (value instanceof List) {
 				//noinspection unchecked
 				for (JsonElement el : (List<JsonElement>)value) {
 					if (!(el instanceof JsonPrimitive)) throw new CDSyntaxError("item_tag_exists array must only contain Strings!");
 					String name = el.getAsString();
 					Identifier id = new Identifier(name);
-					if (!Registry.ITEM.isKnownTag(TagKey.of(Registry.ITEM_KEY, id))) return false;
+					if (Registries.ITEM.getTag(TagKey.of(RegistryKeys.ITEM, id)).isEmpty()) return false;
 				}
 				return true;
 			}
 			throw new CDSyntaxError("item_tag_exists must accept either a String or an Array!");
 		});
 		manager.registerCondition(new Identifier(CDCommons.MODID, "block_exists"), value -> {
-			if (value instanceof String stringValue) return Registry.BLOCK.get(new Identifier(stringValue)) != Blocks.AIR;
+			if (value instanceof String stringValue) return Registries.BLOCK.containsId(new Identifier(stringValue));
 			if (value instanceof List) {
 				//noinspection unchecked
 				for (JsonElement el : (List<JsonElement>)value) {
 					if (!(el instanceof JsonPrimitive)) throw new CDSyntaxError("block_exists array must only contain Strings!");
 					String name = el.getAsString();
-					if (Registry.BLOCK.get(new Identifier(name)) == Blocks.AIR) return false;
+					if (!Registries.BLOCK.containsId(new Identifier(name))) return false;
 				}
 				return true;
 			}
 			throw new CDSyntaxError("block_exists must accept either a String or an Array!");
 		});
 		manager.registerCondition(new Identifier(CDCommons.MODID, "block_tag_exists"), value -> {
-			if (value instanceof String stringValue) return Registry.BLOCK.isKnownTag(TagKey.of(Registry.BLOCK_KEY, new Identifier(stringValue)));
+			if (value instanceof String stringValue) return Registries.BLOCK.getTag(TagKey.of(RegistryKeys.BLOCK, new Identifier(stringValue))).isPresent();
 			if (value instanceof List) {
 				//noinspection unchecked
 				for (JsonElement el : (List<JsonElement>)value) {
 					if (!(el instanceof JsonPrimitive)) throw new CDSyntaxError("block_tag_exists array must only contain Strings!");
-					String name = (el).getAsString();
-					Identifier id = new Identifier(name);
-					if (!Registry.BLOCK.isKnownTag(TagKey.of(Registry.BLOCK_KEY, id))) return false;
-					Registry.BLOCK.getTag(TagKey.of(Registry.BLOCK_KEY, id)).isEmpty();
+					Identifier id = new Identifier(el.getAsString());
+					if (Registries.BLOCK.getTag(TagKey.of(RegistryKeys.BLOCK, id)).isEmpty()) return false;
 				}
 				return true;
 			}
@@ -100,9 +97,7 @@ public class CDContent implements LibCDInitializer {
 					String key = entry.getKey();
 					Identifier id = new Identifier(key);
 					Object result = ConditionalData.parseElement(json.get(key));
-					if (ConditionalData.hasCondition(id)) {
-						return !ConditionalData.testCondition(id, result);
-					} else return false;
+					return ConditionalData.hasCondition(id) && !ConditionalData.testCondition(id, result);
 				}
 			}
 			throw new CDSyntaxError("not must accept an Object!");
