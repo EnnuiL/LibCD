@@ -10,7 +10,6 @@ import org.quiltmc.loader.api.QuiltLoader;
 import io.github.cottonmc.libcd.api.CDCommons;
 import io.github.cottonmc.libcd.api.CDSyntaxError;
 import io.github.cottonmc.libcd.api.LibCDInitializer;
-import io.github.cottonmc.libcd.api.advancement.AdvancementRewardsManager;
 import io.github.cottonmc.libcd.api.condition.ConditionManager;
 import io.github.cottonmc.libcd.api.condition.ConditionalData;
 import net.minecraft.registry.Registries;
@@ -153,10 +152,5 @@ public class CDContent implements LibCDInitializer {
 			if (value instanceof Boolean booleanValue) return booleanValue == LibCD.isDevMode();
 			throw new CDSyntaxError("dev_mode must accept a Boolean!");
 		});
-	}
-
-	@Override
-	public void initAdvancementRewards(AdvancementRewardsManager manager) {
-		//no-op
 	}
 }

@@ -4,9 +4,9 @@
 
 # Port Information
 
-This is an unofficial port of LibCD to Minecraft 1.19.3, originally maintained from 1.14 to 1.16 by the CottonMC team. This fork is meant to be exclusively used by Crooked Crooks, but you may use it on your mods.
+This is an unofficial port of LibCD to Minecraft 1.19.4, originally maintained from 1.14 to 1.16 by the CottonMC team. This fork is meant to be exclusively used by Crooked Crooks, but you may use it on your mods.
 
-The reason for maintaining this is because Fabric API's Resource Conditions API turned out to be inadequate for me, and while a QSL module is planned, this updated fork is a temporary solution until that is created. The intention was to merge this fork back to Cotton's repository, and while the 1.18.2 update has been proven to be stable enough, the 1.19.2 one had sacrificed the Tag Extensions functionality due to it needing a massive overhaul. It has been somewhat succeeded by Vanilla's optional tags, but they are still a feature that should have been kept, and therefore, I don't believe that this is good enough for upstreaming. If you wish to use this work as a base for a complete update, go ahead! But well? This is currently just a bit of duct tape to keep Crooked Crooks working on its best form.
+The reason for maintaining this is because Fabric API's Resource Conditions API turned out to be inadequate for me, and while a QSL module is planned, this updated fork is a temporary solution until that is created. The intention was to merge this fork back to Cotton's repository, although now, the idea is to replace the two main parts: conditions and custom advancement rewards, with new QSL modules, with the library's original main maintainer, Lemma, having endorsed the idea of bringing conditions to QSL.
 
 # Original Description
 

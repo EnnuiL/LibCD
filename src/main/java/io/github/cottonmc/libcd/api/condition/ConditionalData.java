@@ -14,12 +14,11 @@ import org.jetbrains.annotations.Nullable;
 public class ConditionalData {
 	static final Map<Identifier, Condition> conditions = new HashMap<>();
 
-	public static boolean shouldLoad(Identifier resourceId, String meta) {
+	public static boolean shouldLoad(Identifier resourceId, JsonObject json) {
 		if (conditions.isEmpty()) {
 			CDCommons.logger.warn("List of conditions is empty, loading {} anyway", resourceId);
 			return true;
 		}
-		JsonObject json = JsonHelper.deserialize(meta);
 		JsonElement elem = json.get("when");
 		if (elem instanceof JsonArray array) {
 			for (JsonElement condition : array) {

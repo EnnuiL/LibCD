@@ -6,7 +6,7 @@
 		"version": "${version}",
 		"metadata": {
 			"name": "LibConditionalData: Ennui Edition",
-			"description": "It's LibCD but ported to 1.19.2 for usage on Crooked Crooks. Original Description: Various tweaks to make data packs even more useful!",
+			"description": "It's LibCD but ported to 1.19.4 for usage on Crooked Crooks. Original Description: Various tweaks to make data packs even more useful!",
 			"contributors": {
 				"Ennui Langeweile": "Unofficial Maintainer",
 				"CottonMC": "Owner"
@@ -21,32 +21,30 @@
 		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
 			"init": "io.github.cottonmc.libcd.LibCD",
-			"libcd": "io.github.cottonmc.libcd.CDContent",
-			"libcd:advancement_rewards": "io.github.cottonmc.libcd.DevAdvancementRewards"
+			"libcd": "io.github.cottonmc.libcd.CDContent"
 		},
 		"depends": [
 			{
 				"id": "quilt_loader",
-				"versions": ">=0.17.0-"
+				"versions": ">=0.18.1"
 			},
 			{
 				"id": "quilted_fabric_api",
-				"versions": ">=4.0.0-"
+				"versions": ">=6.0.0-"
 			},
 			{
 				"id": "minecraft",
-				"versions": ">=1.19.2"
+				"versions": ">=1.19.4"
 			}
 		],
 		"provides": [
 			{
 				"id": "libcd",
-				"version": "4.0.0+1.19.2"
+				"version": "4.0.0+1.19.4"
 			}
 		]
 	},
 	"mixin": "libcd.mixins.json",
-	"access_widener": "libcd.accesswidener",
 	"modmenu": {
 		"badges": [ "library" ]
 	}

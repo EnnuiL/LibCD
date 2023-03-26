@@ -4,7 +4,7 @@ plugins {
 }
 
 archivesBaseName = project.archives_base_name
-version = "${project.version}+${libs.versions.minecraft.get()}"
+version = "$project.version+${libs.versions.minecraft.get()}"
 group = project.maven_group
 
 // All the dependencies are declared at gradle/libs.version.toml and referenced with "libs.<id>"
@@ -18,10 +18,6 @@ dependencies {
 	// Quilted Fabric API will automatically pull in the correct QSL version.
 	modImplementation libs.quilted.fabric.api
 	// modImplementation libs.bundles.quilted.fabric.api // If you wish to use Fabric API's deprecated modules, you can replace the above line with this one
-}
-
-loom {
-	accessWidenerPath = file("src/main/resources/libcd.accesswidener")
 }
 
 processResources {
